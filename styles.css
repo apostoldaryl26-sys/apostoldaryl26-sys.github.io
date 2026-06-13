@@ -1,0 +1,342 @@
+/* ==========================================================================
+   DESIGN TOKENS
+   Palette: cool ink + cool paper + a single petrol accent.
+   Deliberately avoids warm-cream/terracotta and neon-on-black defaults.
+   ========================================================================== */
+:root {
+  --ink:        #14171c;  /* near-black, cool — primary dark surface */
+  --ink-soft:   #1d2128;  /* raised panels on dark */
+  --paper:      #f5f6f4;  /* cool off-white — primary light surface */
+  --paper-deep: #eceee9;  /* alternate light surface */
+  --line:       #d6d9d2;  /* hairlines on light */
+  --line-dark:  #2c313a;  /* hairlines on dark */
+  --text:       #23262b;
+  --text-soft:  #5a5f64;
+  --text-inv:   #e9eae6;
+  --accent:     #0e5e56;  /* petrol teal — engineered, not decorative */
+  --accent-on-dark: #3aa893;
+
+  --font-display: "Archivo", system-ui, sans-serif;
+  --font-body:    "Newsreader", Georgia, serif;
+  --font-mono:    "IBM Plex Mono", ui-monospace, monospace;
+
+  --max: 1120px;          /* content measure */
+  --pad: clamp(1.25rem, 4vw, 3rem);
+}
+
+/* ==========================================================================
+   RESET & BASE
+   ========================================================================== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  color: var(--text);
+  background: var(--paper);
+  -webkit-font-smoothing: antialiased;
+}
+img, svg { max-width: 100%; display: block; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--accent-on-dark); outline-offset: 3px; }
+
+h1, h2, h3, h4 { font-family: var(--font-display); letter-spacing: -0.015em; }
+h2 { font-size: clamp(1.75rem, 3.4vw, 2.6rem); font-weight: 600; line-height: 1.15; }
+h4 { font-size: 1.05rem; font-weight: 600; }
+
+/* mono eyebrow labels: the technical voice of the site */
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent-on-dark);
+  margin-bottom: 1rem;
+}
+.eyebrow-dark { color: var(--accent); }
+
+section { padding: clamp(4rem, 9vw, 7.5rem) var(--pad); }
+.section-head { max-width: var(--max); margin: 0 auto clamp(2.5rem, 5vw, 4rem); }
+.section-intro { max-width: 38rem; color: var(--text-soft); margin-top: 1rem; }
+
+/* clearly-marked editorial placeholders — impossible to ship by accident */
+.placeholder {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: #8a6d1f;
+  background: #f5edd2;
+  padding: 0.1em 0.4em;
+  border-radius: 3px;
+}
+
+/* ==========================================================================
+   NAVIGATION
+   ========================================================================== */
+.nav {
+  position: sticky; top: 0; z-index: 50;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 0.9rem var(--pad);
+  background: rgba(20, 23, 28, 0.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line-dark);
+}
+.nav-name {
+  font-family: var(--font-display); font-weight: 700;
+  color: var(--text-inv); text-decoration: none; font-size: 1rem;
+}
+.nav-links { display: flex; gap: clamp(0.9rem, 2.5vw, 1.8rem); align-items: center; }
+.nav-links a {
+  font-family: var(--font-mono); font-size: 0.72rem;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--text-inv); text-decoration: none; opacity: 0.75;
+}
+.nav-links a:hover { opacity: 1; }
+.nav-cta { border: 1px solid var(--accent-on-dark); padding: 0.45em 0.9em; border-radius: 2px; opacity: 1 !important; }
+
+/* ==========================================================================
+   HERO — dark surface, two-column: thesis + journey canvas
+   ========================================================================== */
+.hero {
+  background: var(--ink);
+  color: var(--text-inv);
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: center;
+  max-width: none;
+  min-height: 88vh;
+}
+.hero-inner { max-width: 36rem; justify-self: end; }
+.hero h1 {
+  font-size: clamp(2.1rem, 4.6vw, 3.4rem);
+  font-weight: 700;
+  line-height: 1.08;
+  margin-bottom: 1.4rem;
+}
+.hero h1 em { font-style: normal; color: var(--accent-on-dark); }
+.hero-sub { font-size: 1.1rem; color: #b9bcb8; max-width: 32rem; }
+.hero-actions { margin-top: 2.2rem; display: flex; gap: 1rem; flex-wrap: wrap; }
+
+.btn {
+  font-family: var(--font-mono); font-size: 0.78rem;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  text-decoration: none; padding: 0.85em 1.5em; border-radius: 2px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.btn-light { background: var(--text-inv); color: var(--ink); }
+.btn-light:hover { background: var(--accent-on-dark); color: var(--ink); }
+.btn-ghost { border: 1px solid var(--line-dark); color: var(--text-inv); }
+.btn-ghost:hover { border-color: var(--accent-on-dark); color: var(--accent-on-dark); }
+
+/* Journey canvas: hairline orthogonal connectors + labelled nodes.
+   stroke-dash values are set in JS for the draw-on animation. */
+.hero-canvas { width: 100%; max-width: 560px; justify-self: start; }
+.jc-paths path {
+  fill: none;
+  stroke: var(--line-dark);
+  stroke-width: 1.5;
+}
+.jc-nodes circle, .jc-nodes rect {
+  fill: var(--ink);
+  stroke: var(--accent-on-dark);
+  stroke-width: 1.5;
+}
+.jc-nodes text {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  fill: #8e938f;
+  text-anchor: middle;
+}
+
+/* ==========================================================================
+   SELECTED IMPACT — light surface, big numerals in mono
+   ========================================================================== */
+.impact { background: var(--paper); }
+.impact-grid {
+  max-width: var(--max); margin: 0 auto;
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid var(--line);
+  border-left: 1px solid var(--line);
+}
+.impact-item {
+  padding: 2rem 1.75rem 2.25rem;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.impact-num {
+  font-family: var(--font-mono);
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  font-weight: 500;
+  color: var(--accent);
+  display: block; margin-bottom: 0.6rem;
+}
+.impact-item p { font-size: 0.95rem; color: var(--text-soft); }
+
+/* ==========================================================================
+   CASE STUDIES — editorial two-column: meta rail + narrative
+   ========================================================================== */
+.work { background: var(--paper-deep); }
+.case {
+  max-width: var(--max); margin: 0 auto;
+  display: grid; grid-template-columns: 0.85fr 1.6fr;
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  padding: clamp(2.5rem, 5vw, 4rem) 0;
+  border-top: 1px solid var(--line);
+}
+.case-index {
+  font-family: var(--font-mono); font-size: 0.7rem;
+  letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-soft);
+}
+.case-meta h3 { font-size: clamp(1.3rem, 2.4vw, 1.7rem); margin: 0.7rem 0 0.9rem; line-height: 1.2; }
+.case-tags { font-family: var(--font-mono); font-size: 0.74rem; color: var(--accent); line-height: 1.8; }
+.case-block { margin-bottom: 1.6rem; }
+.case-block h4 {
+  font-family: var(--font-mono); font-size: 0.72rem;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--text-soft); margin-bottom: 0.45rem; font-weight: 500;
+}
+.case-outcome { border-left: 3px solid var(--accent); padding-left: 1.1rem; }
+.case-footnote {
+  max-width: var(--max); margin: 2.5rem auto 0;
+  font-size: 0.9rem; color: var(--text-soft);
+}
+
+/* ==========================================================================
+   DOMAINS — dark surface, quiet grid, no skill bars by design
+   ========================================================================== */
+.domains { background: var(--ink); color: var(--text-inv); }
+.section-head-light h2 { color: var(--text-inv); }
+.domain-grid {
+  max-width: var(--max); margin: 0 auto;
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+  background: var(--line-dark); border: 1px solid var(--line-dark);
+}
+.domain { background: var(--ink); padding: 1.75rem 1.4rem; }
+.domain:hover { background: var(--ink-soft); }
+.domain h4 { color: var(--accent-on-dark); margin-bottom: 0.6rem; font-size: 0.98rem; }
+.domain p { font-size: 0.9rem; color: #a9aca8; }
+
+/* ==========================================================================
+   ACCELERATORS — card grid with status labels (built vs planned)
+   ========================================================================== */
+.assets { background: var(--paper); }
+.asset-grid {
+  max-width: var(--max); margin: 0 auto;
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem;
+}
+.asset {
+  border: 1px solid var(--line); border-radius: 3px;
+  padding: 1.6rem 1.5rem 1.8rem; background: #fff;
+}
+.asset-status {
+  font-family: var(--font-mono); font-size: 0.66rem;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  display: inline-block; margin-bottom: 0.9rem;
+  padding: 0.25em 0.7em; border-radius: 2px;
+}
+.asset-built .asset-status { background: var(--accent); color: #fff; }
+.asset-planned .asset-status { background: var(--paper-deep); color: var(--text-soft); }
+.asset h4 { margin-bottom: 0.55rem; }
+.asset p { font-size: 0.92rem; color: var(--text-soft); }
+
+/* ==========================================================================
+   THINKING — dark, generous, essay-like
+   ========================================================================== */
+.thinking { background: var(--ink); color: var(--text-inv); }
+.thinking-list {
+  max-width: var(--max); margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 4vw, 3.5rem);
+}
+.think h4 { font-size: 1.25rem; color: var(--text-inv); margin-bottom: 0.6rem; }
+.think p { color: #a9aca8; font-size: 1rem; }
+
+/* ==========================================================================
+   CAREER EVOLUTION — vertical rail, employer-grouped
+   ========================================================================== */
+.evolution { background: var(--paper-deep); }
+.timeline { max-width: 48rem; margin: 0 auto; list-style: none; }
+.tl-item {
+  position: relative;
+  padding: 0 0 2.75rem 2.25rem;
+  border-left: 1.5px solid var(--line);
+}
+.tl-item:last-child { border-left-color: transparent; padding-bottom: 0; }
+.tl-item::before {
+  content: ""; position: absolute; left: -7px; top: 6px;
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--paper-deep); border: 2px solid var(--accent);
+}
+.tl-period { font-family: var(--font-mono); font-size: 0.74rem; letter-spacing: 0.12em; color: var(--accent); }
+.tl-item h4 { font-size: 1.2rem; margin: 0.35rem 0 0.15rem; }
+.tl-role { font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-soft); margin-bottom: 0.6rem; }
+
+/* ==========================================================================
+   CERTIFICATIONS — tiered, top tier visually elevated
+   ========================================================================== */
+.certs { background: var(--ink); color: var(--text-inv); }
+.cert-tiers {
+  max-width: var(--max); margin: 0 auto;
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem;
+}
+.cert-tier { border: 1px solid var(--line-dark); border-radius: 3px; padding: 1.6rem 1.5rem; }
+.cert-tier-top { border-color: var(--accent-on-dark); background: var(--ink-soft); }
+.cert-tier h4 {
+  font-family: var(--font-mono); font-size: 0.72rem;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--accent-on-dark); margin-bottom: 1rem; font-weight: 500;
+}
+.cert-tier ul { list-style: none; }
+.cert-tier li {
+  font-size: 0.92rem; color: #c4c7c2;
+  padding: 0.45rem 0; border-bottom: 1px solid var(--line-dark);
+}
+.cert-tier li:last-child { border-bottom: none; }
+.cert-tier-top li { font-family: var(--font-display); font-weight: 600; color: var(--text-inv); }
+
+/* ==========================================================================
+   QUOTES (placeholder) & CONTACT
+   ========================================================================== */
+.quotes { background: var(--paper); padding-top: 3rem; padding-bottom: 3rem; }
+.quote-card { max-width: 44rem; margin: 0 auto; text-align: center; }
+
+.contact { background: var(--ink); color: var(--text-inv); text-align: center; }
+.contact h2 { color: var(--text-inv); max-width: 34rem; margin: 0 auto 1rem; }
+.contact-sub { color: #a9aca8; margin-bottom: 2.2rem; }
+.contact-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+.footer { margin-top: 4.5rem; }
+.footer p { font-family: var(--font-mono); font-size: 0.72rem; color: #6b6f6c; }
+
+/* ==========================================================================
+   SCROLL-REVEAL (class added by JS; harmless if JS fails)
+   ========================================================================== */
+.reveal { opacity: 0; transform: translateY(14px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.reveal.is-visible { opacity: 1; transform: none; }
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+@media (max-width: 920px) {
+  .hero { grid-template-columns: 1fr; min-height: auto; padding-top: 4.5rem; }
+  .hero-inner { justify-self: start; }
+  .hero-canvas { max-width: 440px; margin-top: 1rem; }
+  .impact-grid { grid-template-columns: repeat(2, 1fr); }
+  .domain-grid { grid-template-columns: repeat(2, 1fr); }
+  .asset-grid, .cert-tiers { grid-template-columns: 1fr 1fr; }
+  .case { grid-template-columns: 1fr; }
+  .thinking-list { grid-template-columns: 1fr; }
+}
+@media (max-width: 580px) {
+  .nav-links a:not(.nav-cta) { display: none; } /* keep nav minimal on phones */
+  .impact-grid, .domain-grid, .asset-grid, .cert-tiers { grid-template-columns: 1fr; }
+}
+
+/* ==========================================================================
+   REDUCED MOTION — static canvas, no reveals, no smooth scroll
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .jc-paths path { stroke-dasharray: none !important; stroke-dashoffset: 0 !important; }
+}
