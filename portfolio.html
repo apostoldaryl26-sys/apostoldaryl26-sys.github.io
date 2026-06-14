@@ -1,0 +1,1210 @@
+<!-- ============================================================
+     Daryl Dominic Apostol — Portfolio (single-file build)
+     Enhancements: (1) interactive Architecture Spine,
+     (2) progressive case disclosure, (3) connected domains,
+     plus scrollspy nav and restrained micro-interactions.
+     CSS and JS inlined; dependency-free by design.
+     ============================================================ -->
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Daryl Dominic Apostol — Marketing Technology &amp; Customer Engagement Architect</title>
+<meta name="description" content="Hands-on Marketing Technology Architect specialising in Salesforce Marketing Cloud, Data Cloud, Loyalty Management and Personalization. Enterprise customer engagement architecture across the Middle East and APAC." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+<style>
+/* ==========================================================================
+   DESIGN TOKENS
+   ========================================================================== */
+:root {
+  --ink:        #14171c;
+  --ink-soft:   #1d2128;
+  --paper:      #f5f6f4;
+  --paper-deep: #eceee9;
+  --line:       #d6d9d2;
+  --line-dark:  #2c313a;
+  --text:       #23262b;
+  --text-soft:  #5a5f64;
+  --text-inv:   #e9eae6;
+  --accent:     #0e5e56;
+  --accent-on-dark: #3aa893;
+
+  --font-display: "Archivo", system-ui, sans-serif;
+  --font-body:    "Newsreader", Georgia, serif;
+  --font-mono:    "IBM Plex Mono", ui-monospace, monospace;
+
+  --max: 1120px;
+  --pad: clamp(1.25rem, 4vw, 3rem);
+}
+
+/* ==========================================================================
+   RESET & BASE
+   ========================================================================== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  color: var(--text);
+  background: var(--paper);
+  -webkit-font-smoothing: antialiased;
+}
+img, svg { max-width: 100%; display: block; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--accent-on-dark); outline-offset: 3px; }
+
+h1, h2, h3, h4 { font-family: var(--font-display); letter-spacing: -0.015em; }
+h2 { font-size: clamp(1.75rem, 3.4vw, 2.6rem); font-weight: 600; line-height: 1.15; }
+h4 { font-size: 1.05rem; font-weight: 600; }
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent-on-dark);
+  margin-bottom: 1rem;
+}
+.eyebrow-dark { color: var(--accent); }
+
+section { padding: clamp(4rem, 9vw, 7.5rem) var(--pad); }
+.section-head { max-width: var(--max); margin: 0 auto clamp(2.5rem, 5vw, 4rem); }
+.section-intro { max-width: 38rem; color: var(--text-soft); margin-top: 1rem; }
+
+.placeholder {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: #8a6d1f;
+  background: #f5edd2;
+  padding: 0.1em 0.4em;
+  border-radius: 3px;
+}
+
+/* ==========================================================================
+   NAVIGATION  (+ scrollspy active state)
+   ========================================================================== */
+.nav {
+  position: sticky; top: 0; z-index: 50;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 0.9rem var(--pad);
+  background: rgba(20, 23, 28, 0.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line-dark);
+}
+.nav-name {
+  font-family: var(--font-display); font-weight: 700;
+  color: var(--text-inv); text-decoration: none; font-size: 1rem;
+}
+.nav-links { display: flex; gap: clamp(0.9rem, 2.5vw, 1.8rem); align-items: center; }
+.nav-links a {
+  position: relative;
+  font-family: var(--font-mono); font-size: 0.72rem;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--text-inv); text-decoration: none; opacity: 0.7;
+  transition: opacity 0.25s ease, color 0.25s ease;
+}
+.nav-links a:hover { opacity: 1; }
+.nav-links a:not(.nav-cta).is-active { opacity: 1; color: var(--accent-on-dark); }
+.nav-links a:not(.nav-cta).is-active::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -0.4rem;
+  height: 1.5px; background: var(--accent-on-dark);
+}
+.nav-cta { border: 1px solid var(--accent-on-dark); padding: 0.45em 0.9em; border-radius: 2px; opacity: 1 !important; }
+
+/* ==========================================================================
+   HERO  — thesis + interactive Architecture Spine
+   ========================================================================== */
+.hero {
+  background: var(--ink);
+  color: var(--text-inv);
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: center;
+  max-width: none;
+  min-height: 88vh;
+}
+.hero-inner { max-width: 36rem; justify-self: end; }
+.hero h1 {
+  font-size: clamp(2.1rem, 4.6vw, 3.4rem);
+  font-weight: 700;
+  line-height: 1.08;
+  margin-bottom: 1.4rem;
+}
+.hero h1 em { font-style: normal; color: var(--accent-on-dark); }
+.hero-sub { font-size: 1.1rem; color: #b9bcb8; max-width: 32rem; }
+.hero-actions { margin-top: 2.2rem; display: flex; gap: 1rem; flex-wrap: wrap; }
+
+.btn {
+  font-family: var(--font-mono); font-size: 0.78rem;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  text-decoration: none; padding: 0.85em 1.5em; border-radius: 2px;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.25s ease;
+  display: inline-block;
+}
+.btn-light { background: var(--text-inv); color: var(--ink); }
+.btn-light:hover { background: var(--accent-on-dark); color: var(--ink); }
+.btn-ghost { border: 1px solid var(--line-dark); color: var(--text-inv); }
+.btn-ghost:hover { border-color: var(--accent-on-dark); color: var(--accent-on-dark); }
+
+/* --- Architecture Spine --- */
+.spine-wrap { justify-self: start; width: 100%; max-width: 460px; }
+.spine-eyebrow { margin-bottom: 1.1rem; color: #6f746f; }
+.spine { position: relative; padding-left: 1.85rem; }
+.spine-rail {
+  position: absolute; left: 0.5rem; top: 1.1rem; bottom: 1.1rem;
+  width: 1.5px; background: var(--line-dark);
+  transform-origin: top; transform: scaleY(1);
+}
+.spine-layer {
+  position: relative; display: block; width: 100%;
+  text-align: left; background: none; border: none;
+  border-bottom: 1px solid var(--line-dark);
+  padding: 0.72rem 0.1rem; cursor: pointer;
+  color: var(--text-inv); font-family: inherit;
+}
+.spine-layer:last-child { border-bottom: none; }
+.spine-node {
+  position: absolute; left: -1.35rem; top: 1.15rem;
+  width: 9px; height: 9px; border-radius: 50%;
+  background: var(--ink); border: 1.5px solid var(--line-dark);
+  transition: border-color 0.25s ease, background 0.25s ease, transform 0.25s ease;
+}
+.spine-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; }
+.spine-name {
+  font-family: var(--font-display); font-weight: 600;
+  font-size: 1rem; letter-spacing: -0.01em;
+  transition: color 0.25s ease;
+}
+.spine-flow {
+  font-family: var(--font-mono); font-size: 0.62rem;
+  letter-spacing: 0.13em; text-transform: uppercase;
+  color: #6f746f; white-space: nowrap;
+}
+.spine-detail {
+  display: grid; grid-template-rows: 0fr; opacity: 0;
+  transition: grid-template-rows 0.3s ease, opacity 0.3s ease, margin-top 0.3s ease;
+  margin-top: 0;
+}
+.spine-detail > span { overflow: hidden; min-height: 0; }
+.spine-detail span {
+  display: block; font-size: 0.85rem; color: #9fa39e;
+  font-family: var(--font-body); line-height: 1.5;
+}
+.spine-layer:hover .spine-detail,
+.spine-layer:focus-visible .spine-detail,
+.spine-layer.is-active .spine-detail {
+  grid-template-rows: 1fr; opacity: 1; margin-top: 0.35rem;
+}
+.spine-layer:hover .spine-node,
+.spine-layer:focus-visible .spine-node,
+.spine-layer.is-active .spine-node {
+  border-color: var(--accent-on-dark); background: var(--accent-on-dark); transform: scale(1.2);
+}
+.spine-layer:hover .spine-name,
+.spine-layer:focus-visible .spine-name,
+.spine-layer.is-active .spine-name { color: var(--accent-on-dark); }
+
+/* ==========================================================================
+   SELECTED IMPACT
+   ========================================================================== */
+.impact { background: var(--paper); }
+.impact-grid {
+  max-width: var(--max); margin: 0 auto;
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid var(--line);
+  border-left: 1px solid var(--line);
+}
+.impact-item {
+  padding: 2rem 1.75rem 2.25rem;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.impact-num {
+  font-family: var(--font-mono);
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  font-weight: 500;
+  color: var(--accent);
+  display: block; margin-bottom: 0.6rem;
+}
+.impact-item p { font-size: 0.95rem; color: var(--text-soft); }
+
+/* ==========================================================================
+   CASE STUDIES  — progressive disclosure
+   ========================================================================== */
+.work { background: var(--paper-deep); }
+.case {
+  max-width: var(--max); margin: 0 auto;
+  display: grid; grid-template-columns: 0.85fr 1.6fr;
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  padding: clamp(2.5rem, 5vw, 4rem) 0;
+  border-top: 1px solid var(--line);
+}
+.case-index {
+  font-family: var(--font-mono); font-size: 0.7rem;
+  letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-soft);
+}
+.case-meta h3 { font-size: clamp(1.3rem, 2.4vw, 1.7rem); margin: 0.7rem 0 0.9rem; line-height: 1.2; }
+.case-tags { font-family: var(--font-mono); font-size: 0.74rem; color: var(--accent); line-height: 1.8; }
+.case-block { margin-bottom: 1.6rem; }
+.case-block h4 {
+  font-family: var(--font-mono); font-size: 0.72rem;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--text-soft); margin-bottom: 0.45rem; font-weight: 500;
+}
+.case-outcome { border-left: 3px solid var(--accent); padding-left: 1.1rem; }
+
+.case-layers { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.4s ease; }
+.case-layers-inner { overflow: hidden; min-height: 0; }
+.case-layers.is-open { grid-template-rows: 1fr; }
+.case-toggle {
+  font-family: var(--font-mono); font-size: 0.72rem;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  background: none; border: none; cursor: pointer; color: var(--accent);
+  padding: 0.3rem 0; margin: 0 0 1.5rem;
+  display: inline-flex; align-items: center; gap: 0.55rem;
+}
+.case-toggle:hover { color: var(--ink); }
+.case-toggle-icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 1.05rem; height: 1.05rem; border: 1px solid currentColor; border-radius: 2px;
+  font-size: 0.8rem; line-height: 1; transition: transform 0.3s ease;
+}
+.case-toggle[aria-expanded="true"] .case-toggle-icon { transform: rotate(45deg); }
+
+.case-footnote {
+  max-width: var(--max); margin: 2.5rem auto 0;
+  font-size: 0.9rem; color: var(--text-soft);
+}
+
+/* ==========================================================================
+   DOMAINS  — connected expertise hubs (tab pattern)
+   ========================================================================== */
+.domains { background: var(--ink); color: var(--text-inv); }
+.section-head-light h2 { color: var(--text-inv); }
+.domain-explorer {
+  max-width: var(--max); margin: 0 auto;
+  display: grid; grid-template-columns: 1.3fr 1fr;
+  gap: 1.5rem; align-items: start;
+}
+.domain-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px;
+  background: var(--line-dark); border: 1px solid var(--line-dark);
+  align-self: start;
+}
+.domain {
+  background: var(--ink); padding: 1.5rem 1.4rem;
+  text-align: left; border: none; cursor: pointer;
+  font-family: inherit; color: inherit; width: 100%;
+  transition: background 0.25s ease;
+  position: relative;
+}
+.domain:hover { background: var(--ink-soft); }
+.domain[aria-selected="true"] { background: var(--accent); }
+.domain[aria-selected="true"] h4 { color: #fff; }
+.domain[aria-selected="true"] p { color: rgba(255,255,255,0.82); }
+.domain[aria-selected="true"] .domain-hint { color: rgba(255,255,255,0.7); }
+.domain[aria-selected="true"]::after {
+  content: ""; position: absolute; top: 1.6rem; right: 1.3rem;
+  width: 7px; height: 7px; border-radius: 50%; background: #fff;
+}
+.domain h4 { color: var(--accent-on-dark); margin-bottom: 0.55rem; font-size: 0.95rem; transition: color 0.25s ease; }
+.domain p { font-size: 0.88rem; color: #a9aca8; transition: color 0.25s ease; }
+.domain-hint {
+  display: block; margin-top: 0.8rem;
+  font-family: var(--font-mono); font-size: 0.6rem;
+  letter-spacing: 0.14em; text-transform: uppercase; color: #6f746f;
+  transition: color 0.25s ease;
+}
+
+.domain-panel {
+  position: sticky; top: 5rem; min-height: 13rem;
+  border: 1px solid var(--line-dark); border-top: 2px solid var(--accent-on-dark);
+  background: var(--ink-soft); border-radius: 3px;
+  padding: 1.7rem 1.85rem;
+}
+.domain-panel[hidden] { display: none; }
+.domain-panel.is-active { animation: panelIn 0.35s ease; }
+@keyframes panelIn { from { opacity: 0; transform: translateX(8px); } to { opacity: 1; transform: none; } }
+.dp-row { display: flex; flex-direction: column; gap: 1.4rem; }
+.dp-group { min-width: 0; }
+.dp-label {
+  display: block; font-family: var(--font-mono); font-size: 0.66rem;
+  letter-spacing: 0.16em; text-transform: uppercase; color: #6f746f; margin-bottom: 0.6rem;
+}
+.dp-chips { display: flex; flex-wrap: wrap; gap: 0.45rem; max-width: 30rem; }
+.dp-chip {
+  font-family: var(--font-mono); font-size: 0.72rem;
+  border: 1px solid var(--line-dark); border-radius: 2px;
+  padding: 0.32em 0.7em; color: #c4c7c2;
+}
+.dp-applied, .dp-result { font-size: 0.95rem; color: #c4c7c2; max-width: 26rem; }
+.dp-result strong { color: var(--accent-on-dark); font-weight: 500; font-family: var(--font-mono); font-size: 0.92rem; }
+
+/* ==========================================================================
+   ACCELERATORS  — card grid with refined lift
+   ========================================================================== */
+.assets { background: var(--paper); }
+.asset-grid {
+  max-width: var(--max); margin: 0 auto;
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem;
+}
+.asset {
+  border: 1px solid var(--line); border-radius: 3px;
+  padding: 1.6rem 1.5rem 1.8rem; background: #fff;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.asset:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 32px -20px rgba(20,23,28,0.45);
+  border-color: var(--accent);
+}
+.asset-status {
+  font-family: var(--font-mono); font-size: 0.66rem;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  display: inline-block; margin-bottom: 0.9rem;
+  padding: 0.25em 0.7em; border-radius: 2px;
+}
+.asset-built .asset-status { background: var(--accent); color: #fff; }
+.asset-planned .asset-status { background: var(--paper-deep); color: var(--text-soft); }
+.asset h4 { margin-bottom: 0.55rem; }
+.asset p { font-size: 0.92rem; color: var(--text-soft); }
+
+/* ==========================================================================
+   THINKING
+   ========================================================================== */
+.thinking { background: var(--ink); color: var(--text-inv); }
+.thinking-list {
+  max-width: var(--max); margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 4vw, 3.5rem);
+}
+.think h4 { font-size: 1.25rem; color: var(--text-inv); margin-bottom: 0.6rem; }
+.think p { color: #a9aca8; font-size: 1rem; }
+
+/* ==========================================================================
+   CAREER EVOLUTION
+   ========================================================================== */
+.evolution { background: var(--paper-deep); }
+.timeline { max-width: 48rem; margin: 0 auto; list-style: none; }
+.tl-item {
+  position: relative;
+  padding: 0 0 2.75rem 2.25rem;
+  border-left: 1.5px solid var(--line);
+}
+.tl-item:last-child { border-left-color: transparent; padding-bottom: 0; }
+.tl-item::before {
+  content: ""; position: absolute; left: -7px; top: 6px;
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--paper-deep); border: 2px solid var(--accent);
+}
+.tl-period { font-family: var(--font-mono); font-size: 0.74rem; letter-spacing: 0.12em; color: var(--accent); }
+.tl-item h4 { font-size: 1.2rem; margin: 0.35rem 0 0.15rem; }
+.tl-role { font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-soft); margin-bottom: 0.6rem; }
+
+/* ==========================================================================
+   CERTIFICATIONS
+   ========================================================================== */
+.certs { background: var(--ink); color: var(--text-inv); }
+.cert-tiers {
+  max-width: var(--max); margin: 0 auto;
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem;
+}
+.cert-tier { border: 1px solid var(--line-dark); border-radius: 3px; padding: 1.6rem 1.5rem; }
+.cert-tier-top { border-color: var(--accent-on-dark); background: var(--ink-soft); }
+.cert-tier h4 {
+  font-family: var(--font-mono); font-size: 0.72rem;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--accent-on-dark); margin-bottom: 1rem; font-weight: 500;
+}
+.cert-tier ul { list-style: none; }
+.cert-tier li {
+  font-size: 0.92rem; color: #c4c7c2;
+  padding: 0.45rem 0; border-bottom: 1px solid var(--line-dark);
+}
+.cert-tier li:last-child { border-bottom: none; }
+.cert-tier-top li { font-family: var(--font-display); font-weight: 600; color: var(--text-inv); }
+
+/* ==========================================================================
+   QUOTES & CONTACT
+   ========================================================================== */
+.quotes { background: var(--paper); padding-top: 3rem; padding-bottom: 3rem; }
+.quote-card { max-width: 44rem; margin: 0 auto; text-align: center; }
+
+.contact { background: var(--ink); color: var(--text-inv); text-align: center; }
+.contact h2 { color: var(--text-inv); max-width: 34rem; margin: 0 auto 1rem; }
+.contact-sub { color: #a9aca8; margin-bottom: 2.2rem; }
+.contact-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+.footer { margin-top: 4.5rem; }
+.footer p { font-family: var(--font-mono); font-size: 0.72rem; color: #6b6f6c; }
+
+/* ==========================================================================
+   SCROLL-REVEAL
+   ========================================================================== */
+.reveal { opacity: 0; transform: translateY(14px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.reveal.is-visible { opacity: 1; transform: none; }
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+@media (max-width: 920px) {
+  .hero { grid-template-columns: 1fr; min-height: auto; padding-top: 4.5rem; }
+  .hero-inner { justify-self: start; }
+  .spine-wrap { max-width: none; margin-top: 0.5rem; }
+  .impact-grid { grid-template-columns: repeat(2, 1fr); }
+  .domain-explorer { grid-template-columns: 1fr; }
+  .domain-grid { grid-template-columns: repeat(2, 1fr); }
+  .domain-panel { position: static; min-height: 0; margin-top: 1.25rem; }
+  .asset-grid, .cert-tiers { grid-template-columns: 1fr 1fr; }
+  .case { grid-template-columns: 1fr; }
+  .thinking-list { grid-template-columns: 1fr; }
+}
+@media (max-width: 580px) {
+  .nav-links a:not(.nav-cta) { display: none; }
+  .impact-grid, .domain-grid, .asset-grid, .cert-tiers { grid-template-columns: 1fr; }
+  .dp-row { gap: 1.3rem; }
+}
+
+/* ==========================================================================
+   REDUCED MOTION
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .spine-rail { transform: scaleY(1) !important; transition: none !important; }
+  .spine-layer { opacity: 1 !important; transform: none !important; }
+  .case-layers { transition: none; }
+  .domain-panel.is-active { animation: none; }
+  .asset:hover { transform: none; }
+  .btn { transition: background 0.2s ease, color 0.2s ease; }
+}
+</style>
+
+<!-- ============ NAVIGATION ============ -->
+<header class="nav" id="top">
+  <a class="nav-name" href="#top">D.&thinsp;Apostol</a>
+  <nav class="nav-links" aria-label="Primary">
+    <a href="#impact">Impact</a>
+    <a href="#work">Case Studies</a>
+    <a href="#domains">Domains</a>
+    <a href="#assets">Accelerators</a>
+    <a href="#evolution">Career</a>
+    <a href="#contact" class="nav-cta">Contact</a>
+  </nav>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="hero">
+  <div class="hero-inner">
+    <p class="eyebrow">Marketing Technology &amp; Customer Engagement Architect</p>
+    <h1>I design the systems behind<br/>customer loyalty —<br/><em>and I build them myself.</em></h1>
+    <p class="hero-sub">
+      Eight years across the Salesforce ecosystem — Marketing Cloud, Data Cloud, Loyalty,
+      Personalization and Core — turning commercial briefs into engagement architecture
+      that ships, scales, and pays for itself.
+    </p>
+    <div class="hero-actions">
+      <a class="btn btn-light" href="#work">View the work</a>
+      <a class="btn btn-ghost" href="#contact">Start a conversation</a>
+    </div>
+  </div>
+
+  <!-- Architecture Spine: the signature interaction. Each layer is a focusable
+       button; hover/focus/click reveals what happens at that layer and the
+       value that flows down to the next. Draws on load; static under reduced motion. -->
+  <div class="spine-wrap">
+    <p class="eyebrow spine-eyebrow">The engagement stack — top to bottom</p>
+    <div class="spine" aria-label="Customer engagement architecture, strategy through experience">
+      <span class="spine-rail" aria-hidden="true"></span>
+
+      <button class="spine-layer is-active" type="button">
+        <span class="spine-node" aria-hidden="true"></span>
+        <span class="spine-head"><span class="spine-name">Business Strategy</span><span class="spine-flow">Commercial intent ↓</span></span>
+        <span class="spine-detail"><span>Commercial briefs translated into executable engagement architecture.</span></span>
+      </button>
+
+      <button class="spine-layer" type="button">
+        <span class="spine-node" aria-hidden="true"></span>
+        <span class="spine-head"><span class="spine-name">Salesforce Core</span><span class="spine-flow">Unified record ↓</span></span>
+        <span class="spine-detail"><span>Apex and Lightning Web Components — global WhatsApp rollout, bidirectional messaging via UNIFONIC.</span></span>
+      </button>
+
+      <button class="spine-layer" type="button">
+        <span class="spine-node" aria-hidden="true"></span>
+        <span class="spine-head"><span class="spine-name">Data Cloud</span><span class="spine-flow">Trusted profile ↓</span></span>
+        <span class="spine-detail"><span>Identity, data models, and the defect-hunting that keeps campaign targeting honest.</span></span>
+      </button>
+
+      <button class="spine-layer" type="button">
+        <span class="spine-node" aria-hidden="true"></span>
+        <span class="spine-head"><span class="spine-name">Marketing Cloud</span><span class="spine-flow">Orchestrated journey ↓</span></span>
+        <span class="spine-detail"><span>Journey Builder, Automation Studio, AMPscript, SSJS, SQL — built daily for eight years.</span></span>
+      </button>
+
+      <button class="spine-layer" type="button">
+        <span class="spine-node" aria-hidden="true"></span>
+        <span class="spine-head"><span class="spine-name">Loyalty</span><span class="spine-flow">Earned value ↓</span></span>
+        <span class="spine-detail"><span>Comarch integration in a live national programme — offer logic, dependencies, go-live readiness.</span></span>
+      </button>
+
+      <button class="spine-layer" type="button">
+        <span class="spine-node" aria-hidden="true"></span>
+        <span class="spine-head"><span class="spine-name">Personalization</span><span class="spine-flow">Relevant moment ↓</span></span>
+        <span class="spine-detail"><span>Next-best-journey orchestration shaped by behaviour and consent.</span></span>
+      </button>
+
+      <button class="spine-layer" type="button">
+        <span class="spine-node" aria-hidden="true"></span>
+        <span class="spine-head"><span class="spine-name">AI</span><span class="spine-flow">Adaptive decision ↓</span></span>
+        <span class="spine-detail"><span>Salesforce AI Specialist and Anthropic-certified — applied to delivery, not slideware.</span></span>
+      </button>
+
+      <button class="spine-layer" type="button">
+        <span class="spine-node" aria-hidden="true"></span>
+        <span class="spine-head"><span class="spine-name">Customer Experience</span><span class="spine-flow">Measurable outcome</span></span>
+        <span class="spine-detail"><span>The result: +112% registrations, +500 daily transactions, AED 30K incremental gross profit.</span></span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SELECTED IMPACT ============ -->
+<section class="impact" id="impact">
+  <div class="section-head">
+    <p class="eyebrow eyebrow-dark">Selected Impact</p>
+    <h2>Outcomes, not activity.</h2>
+  </div>
+  <div class="impact-grid">
+    <div class="impact-item">
+      <span class="impact-num" data-count="112" data-prefix="+" data-suffix="%">+112%</span>
+      <p>Daily loyalty registrations during a time-critical national campaign, delivered under severe constraints.</p>
+    </div>
+    <div class="impact-item">
+      <span class="impact-num" data-count="30" data-prefix="AED&nbsp;" data-suffix="K">AED&nbsp;30K</span>
+      <p>Incremental gross profit from a single campaign day, with sustained uplift in premium product sales.</p>
+    </div>
+    <div class="impact-item">
+      <span class="impact-num" data-count="90" data-prefix="60–" data-suffix="&nbsp;hrs">60–90&nbsp;hrs</span>
+      <p>Saved every month through a reusable segmentation construct that cut 2–3 hours from every campaign launch.</p>
+    </div>
+    <div class="impact-item">
+      <span class="impact-num" data-count="7000" data-prefix="~" data-suffix="">~7,000</span>
+      <p>Customer records repaired across two systemic data defects — one of which had silently corrupted campaign targeting for over a year.</p>
+    </div>
+    <div class="impact-item">
+      <span class="impact-num" data-count="500" data-prefix="+" data-suffix="">+500</span>
+      <p>Additional daily transactions attributable to behaviour-driven offer orchestration.</p>
+    </div>
+    <div class="impact-item">
+      <span class="impact-num" data-count="14" data-prefix="" data-suffix="">14</span>
+      <p>Salesforce certifications spanning architecture, data, marketing, loyalty, personalization and AI.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FEATURED TRANSFORMATIONS ============ -->
+<section class="work" id="work">
+  <div class="section-head">
+    <p class="eyebrow eyebrow-dark">Featured Transformations</p>
+    <h2>Three engagements, told properly.</h2>
+    <p class="section-intro">Each case opens with the challenge and the outcome. Trace the full architecture in between when you want the depth — no modals, no leaving the page.</p>
+  </div>
+
+  <!-- CASE 1 : ADNOC -->
+  <article class="case">
+    <div class="case-meta">
+      <span class="case-index">Case Study</span>
+      <h3>ADNOC Distribution — Enterprise Loyalty Architecture</h3>
+      <p class="case-tags">Salesforce Marketing Cloud · Personalization Studio · Data Cloud · Comarch Loyalty · Journey &amp; Automation Studio</p>
+    </div>
+    <div class="case-body">
+      <div class="case-block">
+        <h4>Challenge</h4>
+        <p>A national, multi-business loyalty programme — fuel, F&amp;B, FMCG, convenience and station operations — running on a Comarch + Salesforce stack with legacy data defects, fragile lifecycle journeys, and campaign setup processes that didn't scale.</p>
+      </div>
+
+      <div class="case-layers">
+        <div class="case-layers-inner">
+          <div class="case-block">
+            <h4>Stakeholders</h4>
+            <p>Business directors, analytics, F&amp;B, FMCG, station operations, loyalty operations (Comarch offer setup) and technology — with me as the single point of accountability between the business and delivery, securing approvals through face-to-face engagement.</p>
+          </div>
+          <div class="case-block">
+            <h4>Architecture thinking</h4>
+            <p>Treat campaigns as systems, not sends. Trace every defect to its root in the integration layer rather than patching symptoms. Replace one-off builds with reusable constructs that compound: segmentation pages, exclusion frameworks, and behaviour-driven journey orchestration that positions each customer on their next best journey based on behaviour and consent.</p>
+          </div>
+          <div class="case-block">
+            <h4>Technical solution</h4>
+            <p>The SFMC tech stack — Journey Builder, Automation Studio, Personalization Studio — wired to Comarch through the integration layer; SQL and AMPscript segmentation; a reusable emirate-based Cloud Page; and an always-on journey tracker with rotating access keys and logging that removed manual log handoffs to call-centre agents.</p>
+          </div>
+          <div class="case-block">
+            <h4>Execution</h4>
+            <p>End-to-end ownership from commercial brief through launch and reporting. Diagnosed and fixed a year-old Comarch↔Salesforce sync defect that only updated <em>active</em> records, corrupting customer status in the master campaign database. Repaired a birthday-journey defect affecting ~4,000 customers with a same-day fix. Rebuilt mobile scrub and exclusion logic end-to-end (~3,000 invalid records corrected) with full documentation and flow diagrams.</p>
+          </div>
+          <div class="case-block">
+            <h4>Lessons learned</h4>
+            <p>A defect that survives a year isn't a code problem — it's a monitoring and ownership problem. And reusable constructs aren't just efficiency; they're how you buy back the time to find the defects in the first place.</p>
+          </div>
+        </div>
+      </div>
+      <button class="case-toggle" type="button" aria-expanded="false">Trace the full architecture <span class="case-toggle-icon" aria-hidden="true">+</span></button>
+
+      <div class="case-block case-outcome">
+        <h4>Outcome</h4>
+        <p>+112% daily registrations, +500 daily transactions and AED 30,000 incremental gross profit from a single flagship campaign. 60–90 hours of operational effort recovered monthly. Restored data integrity and stakeholder trust across the loyalty estate.</p>
+      </div>
+    </div>
+  </article>
+
+  <!-- CASE 2 : DUBAI TOURISM -->
+  <article class="case">
+    <div class="case-meta">
+      <span class="case-index">Case Study</span>
+      <h3>Dubai Tourism — Marketing Technology Architecture</h3>
+      <p class="case-tags">SFMC · Custom API Integration · Journey Builder · Dynamic Content</p>
+    </div>
+    <div class="case-body">
+      <div class="case-block">
+        <h4>Challenge</h4>
+        <p>A high-visibility national tourism brand needed lead generation and engagement journeys connected to external systems — without the manual effort that was holding the marketing operation back.</p>
+      </div>
+
+      <div class="case-layers">
+        <div class="case-layers-inner">
+          <div class="case-block">
+            <h4>Stakeholders</h4>
+            <p>The national tourism marketing team and the external lead-source systems feeding their pipeline.</p>
+          </div>
+          <div class="case-block">
+            <h4>Architecture thinking</h4>
+            <p>Remove the manual middle. Let external lead data flow straight into journeys, and let email templates assemble themselves from source data rather than from a person's time.</p>
+          </div>
+          <div class="case-block">
+            <h4>Technical solution</h4>
+            <p>Custom API integrations feeding lead data into SFMC; dynamic email template systems driven by source data; and Automation Studio rework to remove recurring manual steps.</p>
+          </div>
+          <div class="case-block">
+            <h4>Execution</h4>
+            <p>Designed and built the integrations and template systems for personalised engagement at scale, then streamlined the surrounding automation so the team stopped re-doing the same work each campaign.</p>
+          </div>
+          <div class="case-block">
+            <h4>Lessons learned</h4>
+            <p>Personalisation at scale is a templating problem before it's a content problem. Solve the assembly and the content takes care of itself.</p>
+          </div>
+        </div>
+      </div>
+      <button class="case-toggle" type="button" aria-expanded="false">Trace the full architecture <span class="case-toggle-icon" aria-hidden="true">+</span></button>
+
+      <div class="case-block case-outcome">
+        <h4>Outcome</h4>
+        <p>Higher engagement on dynamic content and a measurable reduction in manual campaign effort. <span class="placeholder">[METRIC NEEDED — add engagement % or hours-saved figures when available]</span></p>
+      </div>
+    </div>
+  </article>
+
+  <!-- CASE 3 : INCHCAPE -->
+  <article class="case">
+    <div class="case-meta">
+      <span class="case-index">Case Study</span>
+      <h3>Inchcape PLC — APAC Marketing Cloud Transformation</h3>
+      <p class="case-tags">Multi-market SFMC · SQL · AMPscript · SSJS · Third-party Booking Integration</p>
+    </div>
+    <div class="case-body">
+      <div class="case-block">
+        <h4>Challenge</h4>
+        <p>A global automotive distributor needed consistent, locally-relevant Marketing Cloud solutions across APAC markets — each with its own data realities, languages and third-party systems.</p>
+      </div>
+
+      <div class="case-layers">
+        <div class="case-layers-inner">
+          <div class="case-block">
+            <h4>Stakeholders</h4>
+            <p>APAC market teams, third-party booking platforms, and regional data owners — each with different constraints.</p>
+          </div>
+          <div class="case-block">
+            <h4>Architecture thinking</h4>
+            <p>One pattern, many markets. Build market-aware solutions that survive local data realities and languages rather than bespoke builds per country.</p>
+          </div>
+          <div class="case-block">
+            <h4>Technical solution</h4>
+            <p>SQL, AMPscript and SSJS at depth; a two-way booking-system integration with third-party sites; and managed multi-market SFMC deployments.</p>
+          </div>
+          <div class="case-block">
+            <h4>Execution</h4>
+            <p>Led the APAC solution build over two years, owning the depth work and keeping deployments consistent as the footprint grew across markets.</p>
+          </div>
+          <div class="case-block">
+            <h4>Lessons learned</h4>
+            <p>Multi-market is a deployment-risk problem. The win is in repeatability, not cleverness.</p>
+          </div>
+        </div>
+      </div>
+      <button class="case-toggle" type="button" aria-expanded="false">Trace the full architecture <span class="case-toggle-icon" aria-hidden="true">+</span></button>
+
+      <div class="case-block case-outcome">
+        <h4>Outcome</h4>
+        <p>Reliable multi-market operations with reduced deployment risk. <span class="placeholder">[METRIC NEEDED — markets served, volume handled, or efficiency gained]</span></p>
+      </div>
+    </div>
+  </article>
+
+  <p class="case-footnote">Additional engagements — McDonald's (Braze), Al Jasser (Salesforce Core / WhatsApp via LWC &amp; Apex), Stellantis, ALDAR, Bab Rizq Jameel, Jacobs Douwe Egberts — are summarised in <a href="#evolution">Career Evolution</a>.</p>
+</section>
+
+<!-- ============ ARCHITECTURE DOMAINS ============ -->
+<section class="domains" id="domains">
+  <div class="section-head section-head-light">
+    <p class="eyebrow">Architecture Domains</p>
+    <h2>Depth where it matters.</h2>
+    <p class="section-intro" style="color:#a9aca8;">Select a domain to see the certifications behind it, where it was applied, and what it produced.</p>
+  </div>
+
+  <div class="domain-explorer">
+    <div class="domain-grid" role="tablist" aria-label="Architecture domains">
+      <button class="domain" role="tab" id="dt-mc" aria-controls="dp-mc" aria-selected="true" tabindex="0" type="button">
+        <h4>Marketing Cloud Engagement</h4>
+        <p>Journey Builder, Automation Studio, AMPscript, SSJS, SQL, CloudPages — built daily for eight years, across three continents.</p>
+        <span class="domain-hint">Explore →</span>
+      </button>
+      <button class="domain" role="tab" id="dt-data" aria-controls="dp-data" aria-selected="false" tabindex="-1" type="button">
+        <h4>Data Cloud &amp; Data Architecture</h4>
+        <p>Certified Platform Data Architect and Data Cloud Consultant. Data models, identity, and the unglamorous defect-hunting that keeps them honest.</p>
+        <span class="domain-hint">Explore →</span>
+      </button>
+      <button class="domain" role="tab" id="dt-loyalty" aria-controls="dp-loyalty" aria-selected="false" tabindex="-1" type="button">
+        <h4>Loyalty Management</h4>
+        <p>Salesforce Loyalty Management certified; deep operational experience with Comarch loyalty integration in a live national programme.</p>
+        <span class="domain-hint">Explore →</span>
+      </button>
+      <button class="domain" role="tab" id="dt-pers" aria-controls="dp-pers" aria-selected="false" tabindex="-1" type="button">
+        <h4>Personalization</h4>
+        <p>Behaviour-driven next-best-journey orchestration with Personalization Studio — offers, communications and visibility shaped by behaviour and consent.</p>
+        <span class="domain-hint">Explore →</span>
+      </button>
+      <button class="domain" role="tab" id="dt-core" aria-controls="dp-core" aria-selected="false" tabindex="-1" type="button">
+        <h4>Salesforce Core</h4>
+        <p>Apex and Lightning Web Components in production — including a global WhatsApp integration rollout and bidirectional messaging via UNIFONIC.</p>
+        <span class="domain-hint">Explore →</span>
+      </button>
+      <button class="domain" role="tab" id="dt-int" aria-controls="dp-int" aria-selected="false" tabindex="-1" type="button">
+        <h4>Integration Architecture</h4>
+        <p>REST APIs end to end: Twilio, SendGrid, QueueMo, booking platforms. Once corrected discrepancies in official Salesforce documentation along the way.</p>
+        <span class="domain-hint">Explore →</span>
+      </button>
+      <button class="domain" role="tab" id="dt-ai" aria-controls="dp-ai" aria-selected="false" tabindex="-1" type="button">
+        <h4>AI &amp; Automation</h4>
+        <p>Salesforce AI Specialist plus five Anthropic certifications — applying AI fluency to martech delivery, not just talking about it.</p>
+        <span class="domain-hint">Explore →</span>
+      </button>
+      <button class="domain" role="tab" id="dt-cds" aria-controls="dp-cds" aria-selected="false" tabindex="-1" type="button">
+        <h4>Customer Data Strategy</h4>
+        <p>Consent, exclusion and suppression logic; data quality frameworks; the governance layer that makes personalization safe to scale.</p>
+        <span class="domain-hint">Explore →</span>
+      </button>
+    </div>
+
+    <!-- Panels: the connective tissue — certs + project + outcome per domain -->
+    <div class="domain-panel is-active" id="dp-mc" role="tabpanel" aria-labelledby="dt-mc" tabindex="0">
+      <div class="dp-row">
+        <div class="dp-group"><span class="dp-label">Certifications</span><div class="dp-chips"><span class="dp-chip">MC Developer</span><span class="dp-chip">MC Consultant</span><span class="dp-chip">MC Email Specialist</span><span class="dp-chip">MC Administrator</span></div></div>
+        <div class="dp-group"><span class="dp-label">Applied in</span><p class="dp-applied">ADNOC · Dubai Tourism · Inchcape (APAC) · McDonald's</p></div>
+        <div class="dp-group"><span class="dp-label">Result</span><p class="dp-result"><strong>60–90 hrs/month</strong> recovered through reusable segmentation constructs.</p></div>
+      </div>
+    </div>
+    <div class="domain-panel" id="dp-data" role="tabpanel" aria-labelledby="dt-data" tabindex="0" hidden>
+      <div class="dp-row">
+        <div class="dp-group"><span class="dp-label">Certifications</span><div class="dp-chips"><span class="dp-chip">Platform Data Architect</span><span class="dp-chip">Data Cloud Consultant</span></div></div>
+        <div class="dp-group"><span class="dp-label">Applied in</span><p class="dp-applied">ADNOC — Comarch↔Salesforce sync investigation</p></div>
+        <div class="dp-group"><span class="dp-label">Result</span><p class="dp-result"><strong>~7,000 records</strong> repaired across two systemic defects.</p></div>
+      </div>
+    </div>
+    <div class="domain-panel" id="dp-loyalty" role="tabpanel" aria-labelledby="dt-loyalty" tabindex="0" hidden>
+      <div class="dp-row">
+        <div class="dp-group"><span class="dp-label">Certifications</span><div class="dp-chips"><span class="dp-chip">Loyalty Management</span></div></div>
+        <div class="dp-group"><span class="dp-label">Applied in</span><p class="dp-applied">ADNOC Distribution — live national programme on Comarch</p></div>
+        <div class="dp-group"><span class="dp-label">Result</span><p class="dp-result"><strong>+112% registrations</strong>, AED 30K incremental GP.</p></div>
+      </div>
+    </div>
+    <div class="domain-panel" id="dp-pers" role="tabpanel" aria-labelledby="dt-pers" tabindex="0" hidden>
+      <div class="dp-row">
+        <div class="dp-group"><span class="dp-label">Certifications</span><div class="dp-chips"><span class="dp-chip">MC Personalization</span><span class="dp-chip">MC Intelligence</span></div></div>
+        <div class="dp-group"><span class="dp-label">Applied in</span><p class="dp-applied">ADNOC — behaviour-driven next-best-journey orchestration</p></div>
+        <div class="dp-group"><span class="dp-label">Result</span><p class="dp-result"><strong>+500 daily transactions</strong> from behaviour-led offers.</p></div>
+      </div>
+    </div>
+    <div class="domain-panel" id="dp-core" role="tabpanel" aria-labelledby="dt-core" tabindex="0" hidden>
+      <div class="dp-row">
+        <div class="dp-group"><span class="dp-label">Certifications</span><div class="dp-chips"><span class="dp-chip">Salesforce Administrator</span><span class="dp-chip">Salesforce Associate</span></div></div>
+        <div class="dp-group"><span class="dp-label">Applied in</span><p class="dp-applied">Al Jasser (KSA) — global WhatsApp rollout via LWC &amp; Apex</p></div>
+        <div class="dp-group"><span class="dp-label">Result</span><p class="dp-result"><strong>Bidirectional messaging</strong> live globally via UNIFONIC.</p></div>
+      </div>
+    </div>
+    <div class="domain-panel" id="dp-int" role="tabpanel" aria-labelledby="dt-int" tabindex="0" hidden>
+      <div class="dp-row">
+        <div class="dp-group"><span class="dp-label">Technologies</span><div class="dp-chips"><span class="dp-chip">Twilio</span><span class="dp-chip">SendGrid</span><span class="dp-chip">QueueMo</span><span class="dp-chip">REST</span></div></div>
+        <div class="dp-group"><span class="dp-label">Applied in</span><p class="dp-applied">Ready Media Group · Bab Rizq Jameel · Inchcape booking integration</p></div>
+        <div class="dp-group"><span class="dp-label">Result</span><p class="dp-result"><strong>Corrected</strong> discrepancies in official Salesforce documentation.</p></div>
+      </div>
+    </div>
+    <div class="domain-panel" id="dp-ai" role="tabpanel" aria-labelledby="dt-ai" tabindex="0" hidden>
+      <div class="dp-row">
+        <div class="dp-group"><span class="dp-label">Certifications</span><div class="dp-chips"><span class="dp-chip">Salesforce AI Specialist</span><span class="dp-chip">Salesforce AI Associate</span><span class="dp-chip">Anthropic ×5</span></div></div>
+        <div class="dp-group"><span class="dp-label">Applied in</span><p class="dp-applied">Martech delivery automation and tooling</p></div>
+        <div class="dp-group"><span class="dp-label">Result</span><p class="dp-result"><strong>AI fluency</strong> applied to delivery, not slideware.</p></div>
+      </div>
+    </div>
+    <div class="domain-panel" id="dp-cds" role="tabpanel" aria-labelledby="dt-cds" tabindex="0" hidden>
+      <div class="dp-row">
+        <div class="dp-group"><span class="dp-label">Certifications</span><div class="dp-chips"><span class="dp-chip">Platform Data Architect</span><span class="dp-chip">Account Engagement Specialist</span></div></div>
+        <div class="dp-group"><span class="dp-label">Applied in</span><p class="dp-applied">ADNOC — consent, exclusion and suppression logic</p></div>
+        <div class="dp-group"><span class="dp-label">Result</span><p class="dp-result"><strong>~3,000 invalid records</strong> corrected; personalization safe to scale.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ACCELERATORS & ASSETS ============ -->
+<section class="assets" id="assets">
+  <div class="section-head">
+    <p class="eyebrow eyebrow-dark">Accelerators &amp; Assets</p>
+    <h2>Reusable beats heroic.</h2>
+    <p class="section-intro">Tools and frameworks built once, used many times. This library grows — new assets are added as they're productised.</p>
+  </div>
+  <div class="asset-grid">
+    <article class="asset asset-built">
+      <span class="asset-status">In production</span>
+      <h4>Emirates Station Segmentation Page</h4>
+      <p>A reusable Cloud Page for emirate-based station targeting. Cut 2–3 hours from every campaign launch — 60–90 hours recovered monthly.</p>
+    </article>
+    <article class="asset asset-built">
+      <span class="asset-status">In production</span>
+      <h4>Always-On Journey Tracker</h4>
+      <p>Historical journey tracking with rotating access keys and logging — removing the need to ship logs to call-centre agents manually.</p>
+    </article>
+    <article class="asset asset-built">
+      <span class="asset-status">In production</span>
+      <h4>Mobile Scrub &amp; Exclusion Framework</h4>
+      <p>End-to-end rebuilt exclusion logic with full documentation and flow diagrams for both business and technical audiences.</p>
+    </article>
+    <article class="asset asset-planned">
+      <span class="asset-status">In development</span>
+      <h4>Campaign Readiness Framework</h4>
+      <p class="placeholder">[PLACEHOLDER — codify the brief-to-launch checklist used at ADNOC into a shareable framework]</p>
+    </article>
+    <article class="asset asset-planned">
+      <span class="asset-status">In development</span>
+      <h4>Lifecycle Architecture Blueprint</h4>
+      <p class="placeholder">[PLACEHOLDER — reference architecture for behaviour-driven next-best-journey programmes]</p>
+    </article>
+    <article class="asset asset-planned">
+      <span class="asset-status">In development</span>
+      <h4>Data Quality Defect Playbook</h4>
+      <p class="placeholder">[PLACEHOLDER — diagnostic method from the Comarch↔Salesforce sync investigation]</p>
+    </article>
+  </div>
+</section>
+
+<!-- ============ THINKING & PLAYBOOKS ============ -->
+<section class="thinking" id="thinking">
+  <div class="section-head section-head-light">
+    <p class="eyebrow">Thinking &amp; Playbooks</p>
+    <h2>How I work.</h2>
+  </div>
+  <div class="thinking-list">
+    <article class="think">
+      <h4>Campaigns are systems, not sends.</h4>
+      <p>A campaign that works once is luck. A campaign construct that works every time is architecture. I design for the hundredth launch, not the first.</p>
+    </article>
+    <article class="think">
+      <h4>Data defects are trust defects.</h4>
+      <p>When a sync bug silently mismarks customers for a year, the cost isn't technical — it's every decision made on bad data. Root-cause discipline is a commercial skill.</p>
+    </article>
+    <article class="think">
+      <h4>The architect should be able to build it.</h4>
+      <p>Diagrams that can't survive contact with AMPscript, Apex, or an API rate limit aren't architecture. Staying hands-on keeps designs honest.</p>
+    </article>
+    <article class="think">
+      <h4>Stakeholders are part of the system.</h4>
+      <p>Approvals, operational readiness and face-to-face accountability are architectural concerns. The best design fails if the business never signs it off.</p>
+    </article>
+  </div>
+</section>
+
+<!-- ============ CAREER EVOLUTION ============ -->
+<section class="evolution" id="evolution">
+  <div class="section-head">
+    <p class="eyebrow eyebrow-dark">Career Evolution</p>
+    <h2>Support → Development → Architecture → Engagement Leadership</h2>
+    <p class="section-intro">Three employers. A widening scope. Client engagements delivered as part of consulting teams at each.</p>
+  </div>
+  <ol class="timeline">
+    <li class="tl-item">
+      <span class="tl-period">2018 — 2021</span>
+      <h4>Accenture</h4>
+      <p class="tl-role">Application Support → Salesforce Marketing Cloud Developer</p>
+      <p>From guiding Salesforce clients through TLS migrations to building Journey Builder automations, SQL and CloudPages for Jacobs Douwe Egberts (Netherlands). Recognised with the Bayanihan and Agila awards and as a top performer in Global Technical Services for Salesforce.</p>
+    </li>
+    <li class="tl-item">
+      <span class="tl-period">2021 — 2023</span>
+      <h4>ETICA Digital (Australia)</h4>
+      <p class="tl-role">Senior Lead Developer &amp; Marketing Cloud Solutions Architect</p>
+      <p>Led APAC market solutions for Inchcape PLC over two years, then served as sole architect-developer for Ready Media Group — website integration, custom preference centre, and Mobile Connect SMS via QueueMo REST APIs.</p>
+    </li>
+    <li class="tl-item">
+      <span class="tl-period">2023 — Present</span>
+      <h4>Digitas — Publicis Groupe (UAE)</h4>
+      <p class="tl-role">Solutions Architect → Loyalty &amp; Engagement Architecture Lead</p>
+      <p>A portfolio of enterprise clients across the Gulf: Dubai Tourism, ADNOC, Al Jasser (Salesforce Core, global WhatsApp rollout), McDonald's (Braze), Stellantis, ALDAR, and Bab Rizq Jameel. Currently leading loyalty campaign architecture and delivery for ADNOC Distribution end to end.</p>
+    </li>
+  </ol>
+</section>
+
+<!-- ============ CERTIFICATIONS ============ -->
+<section class="certs" id="certs">
+  <div class="section-head section-head-light">
+    <p class="eyebrow">Certification Portfolio</p>
+    <h2>Evidence, not the headline.</h2>
+  </div>
+  <div class="cert-tiers">
+    <div class="cert-tier cert-tier-top">
+      <h4>Architect &amp; Consultant</h4>
+      <ul>
+        <li>Platform Data Architect</li>
+        <li>Data Cloud Consultant</li>
+        <li>Marketing Cloud Consultant</li>
+      </ul>
+    </div>
+    <div class="cert-tier">
+      <h4>Marketing &amp; Loyalty</h4>
+      <ul>
+        <li>Marketing Cloud Developer</li>
+        <li>Marketing Cloud Administrator</li>
+        <li>Marketing Cloud Email Specialist</li>
+        <li>Marketing Cloud Personalization</li>
+        <li>Marketing Cloud Intelligence</li>
+        <li>Loyalty Management</li>
+        <li>Account Engagement Specialist</li>
+      </ul>
+    </div>
+    <div class="cert-tier">
+      <h4>Platform &amp; AI</h4>
+      <ul>
+        <li>Salesforce AI Specialist</li>
+        <li>Salesforce AI Associate</li>
+        <li>Salesforce Administrator</li>
+        <li>Salesforce Associate</li>
+        <li>Anthropic — Claude Code 101, Claude Platform 101, AI Fluency (×3)</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TESTIMONIALS (placeholder) ============ -->
+<section class="quotes">
+  <div class="quote-card">
+    <p class="placeholder">[PLACEHOLDER — request a short quote from a Digitas director or ADNOC stakeholder. One genuine sentence here is worth more than any section on this page.]</p>
+  </div>
+</section>
+
+<!-- ============ CONTACT ============ -->
+<section class="contact" id="contact">
+  <p class="eyebrow">Contact</p>
+  <h2>Let's talk about your engagement architecture.</h2>
+  <p class="contact-sub">Open to senior architect, martech lead, and CRM transformation roles — UAE-based, globally minded.</p>
+  <div class="contact-actions">
+    <a class="btn btn-light" href="mailto:apostol.daryl26@gmail.com">apostol.daryl26@gmail.com</a>
+    <a class="btn btn-ghost" href="https://www.linkedin.com/in/daryl-dominic-apostol-31373a136/" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
+  <footer class="footer">
+    <p>© 2026 Daryl Dominic A. Apostol · Dubai, UAE</p>
+  </footer>
+</section>
+
+<script>
+/* Progressive enhancement throughout: the page is fully usable without JS,
+   and every animation respects reduced-motion. Dependency-free by design. */
+const motionOK = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* ----------------------------------------------------------------------
+   1. ARCHITECTURE SPINE — rail draw-on, staggered layer reveal, tap-to-open
+   ---------------------------------------------------------------------- */
+const spineRail = document.querySelector(".spine-rail");
+const spineLayers = document.querySelectorAll(".spine-layer");
+
+if (motionOK && spineRail) {
+  spineRail.style.transform = "scaleY(0)";
+  spineRail.style.transition = "transform 1.1s ease 0.2s";
+  spineRail.getBoundingClientRect();
+  requestAnimationFrame(() => (spineRail.style.transform = "scaleY(1)"));
+
+  spineLayers.forEach((layer, i) => {
+    layer.style.opacity = "0";
+    layer.style.transform = "translateX(8px)";
+    layer.style.transition = `opacity 0.5s ease ${0.3 + i * 0.12}s, transform 0.5s ease ${0.3 + i * 0.12}s`;
+    requestAnimationFrame(() => {
+      layer.style.opacity = "1";
+      layer.style.transform = "none";
+    });
+  });
+}
+
+/* Click/tap to pin a layer open (hover handles desktop preview via CSS). */
+spineLayers.forEach((layer) => {
+  layer.addEventListener("click", () => {
+    const wasActive = layer.classList.contains("is-active");
+    spineLayers.forEach((l) => l.classList.remove("is-active"));
+    if (!wasActive) layer.classList.add("is-active");
+  });
+});
+
+/* ----------------------------------------------------------------------
+   2. CASE STUDIES — progressive disclosure (no modal, no navigation)
+   ---------------------------------------------------------------------- */
+document.querySelectorAll(".case-toggle").forEach((btn) => {
+  const region = btn.previousElementSibling; // .case-layers
+  btn.addEventListener("click", () => {
+    const open = region.classList.toggle("is-open");
+    btn.setAttribute("aria-expanded", String(open));
+    const label = btn.childNodes[0];
+    label.textContent = open ? "Hide the breakdown " : "Trace the full architecture ";
+  });
+});
+
+/* ----------------------------------------------------------------------
+   3. DOMAINS — connected expertise hubs (ARIA tab pattern, roving tabindex)
+   ---------------------------------------------------------------------- */
+const domainTabs = Array.from(document.querySelectorAll('.domain[role="tab"]'));
+
+function selectDomain(tab, focusTab = true) {
+  domainTabs.forEach((t) => {
+    const selected = t === tab;
+    t.setAttribute("aria-selected", String(selected));
+    t.tabIndex = selected ? 0 : -1;
+    const panel = document.getElementById(t.getAttribute("aria-controls"));
+    if (panel) {
+      panel.hidden = !selected;
+      panel.classList.toggle("is-active", selected);
+    }
+  });
+  const activePanel = document.getElementById(tab.getAttribute("aria-controls"));
+  if (activePanel && window.matchMedia("(max-width: 920px)").matches) {
+    activePanel.scrollIntoView({ behavior: motionOK ? "smooth" : "auto", block: "nearest" });
+  }
+  if (focusTab) tab.focus();
+}
+
+domainTabs.forEach((tab, i) => {
+  tab.addEventListener("click", () => selectDomain(tab, false));
+  tab.addEventListener("keydown", (e) => {
+    let idx = null;
+    if (e.key === "ArrowRight" || e.key === "ArrowDown") idx = (i + 1) % domainTabs.length;
+    else if (e.key === "ArrowLeft" || e.key === "ArrowUp") idx = (i - 1 + domainTabs.length) % domainTabs.length;
+    else if (e.key === "Home") idx = 0;
+    else if (e.key === "End") idx = domainTabs.length - 1;
+    if (idx !== null) {
+      e.preventDefault();
+      selectDomain(domainTabs[idx]);
+    }
+  });
+});
+
+/* ----------------------------------------------------------------------
+   4. SCROLLSPY NAV — active section awareness
+   ---------------------------------------------------------------------- */
+const navLinks = Array.from(document.querySelectorAll('.nav-links a[href^="#"]:not(.nav-cta)'));
+const linkFor = (id) => navLinks.find((a) => a.getAttribute("href") === "#" + id);
+
+if ("IntersectionObserver" in window && navLinks.length) {
+  const spy = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const link = linkFor(entry.target.id);
+          if (link) {
+            navLinks.forEach((a) => a.classList.remove("is-active"));
+            link.classList.add("is-active");
+          }
+        }
+      });
+    },
+    { rootMargin: "-45% 0px -50% 0px", threshold: 0 }
+  );
+  ["impact", "work", "domains", "assets", "evolution", "contact"].forEach((id) => {
+    const sec = document.getElementById(id);
+    if (sec) spy.observe(sec);
+  });
+}
+
+/* ----------------------------------------------------------------------
+   5. MICRO-INTERACTIONS — magnetic-lite buttons (fine pointer + motion only)
+   ---------------------------------------------------------------------- */
+if (motionOK && window.matchMedia("(pointer: fine)").matches) {
+  document.querySelectorAll(".btn").forEach((btn) => {
+    btn.addEventListener("mousemove", (e) => {
+      const r = btn.getBoundingClientRect();
+      const x = e.clientX - r.left - r.width / 2;
+      const y = e.clientY - r.top - r.height / 2;
+      btn.style.transform = `translate(${x * 0.12}px, ${y * 0.18}px)`;
+    });
+    btn.addEventListener("mouseleave", () => (btn.style.transform = ""));
+  });
+}
+
+/* ----------------------------------------------------------------------
+   6. SCROLL REVEAL (existing)
+   ---------------------------------------------------------------------- */
+const revealTargets = document.querySelectorAll(
+  ".impact-item, .case, .domain, .asset, .think, .tl-item, .cert-tier"
+);
+if (motionOK && "IntersectionObserver" in window) {
+  revealTargets.forEach((el) => el.classList.add("reveal"));
+  const io = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          io.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.15 }
+  );
+  revealTargets.forEach((el) => io.observe(el));
+}
+
+/* ----------------------------------------------------------------------
+   7. IMPACT COUNTERS (existing)
+   ---------------------------------------------------------------------- */
+function animateCount(el) {
+  const target = parseInt(el.dataset.count, 10);
+  const prefix = el.dataset.prefix || "";
+  const suffix = el.dataset.suffix || "";
+  const duration = 1200;
+  const start = performance.now();
+  function frame(now) {
+    const t = Math.min((now - start) / duration, 1);
+    const eased = 1 - Math.pow(1 - t, 3);
+    const value = Math.round(target * eased).toLocaleString("en-US");
+    el.innerHTML = prefix + value + suffix;
+    if (t < 1) requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+}
+if (motionOK && "IntersectionObserver" in window) {
+  const counters = document.querySelectorAll(".impact-num[data-count]");
+  const cio = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          animateCount(entry.target);
+          cio.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.5 }
+  );
+  counters.forEach((el) => cio.observe(el));
+}
+</script>
